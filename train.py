@@ -1,5 +1,5 @@
 """Entrena el modelo final y lo guarda en models/.
-Uso: python train.py --train data/train_data.jsonlines --bert-oof colab/oof_bert.npy"""
+Uso: python train.py --train data/train_data.jsonlines --bert-oof colab/oof_bert.npy colab/oof_beto.npy"""
 import argparse, os, sys, time, joblib
 import numpy as np, pandas as pd, torch, lightgbm as lgb
 from catboost import CatBoostClassifier
@@ -9,7 +9,7 @@ from common import load, make_df, with_cats, labels
 from stack_lib import fit_stack, dense_frame, SEED
 from nn_lib import Prep, train_nn, predict_nn
 
-ap = argparse.ArgumentParser(); ap.add_argument("--train", required=True); ap.add_argument("--bert-oof", required=True); ap.add_argument("--out", default="models")
+ap = argparse.ArgumentParser(); ap.add_argument("--train", required=True); ap.add_argument("--bert-oof", required=True, nargs="+", help="uno o mas .npy con probabilidades OOF de BERT"); ap.add_argument("--out", default="models")
 a = ap.parse_args(); os.makedirs(a.out, exist_ok=True); t0 = time.time()
 rows = load(a.train); y = labels(rows); df = make_df(rows)
 
@@ -26,7 +26,9 @@ print("NN OOF acc", round(((oof > .5) == y).mean(), 4), round(time.time() - t0),
 nets = [train_nn(pp, A[:4], y, nt, na, epochs=7, seed=s) for s in (11, 12)]
 
 # 3) Matriz final: variables + stack + BERT (OOF generado en Colab) + NN
-X = pd.concat([D, ftr], axis=1); X["bert"] = np.load(a.bert_oof); X["nn"] = oof
+X = pd.concat([D, ftr], axis=1)
+for i, f in enumerate(a.bert_oof): X[f"bert{i}"] = np.load(f)
+X["nn"] = oof
 C = with_cats(X, df); cc = [c for c in C.columns if c.startswith("cf_")]
 
 # 4) LightGBM + CatBoost (2 semillas); blend 0.3 / 0.7 en predict.py

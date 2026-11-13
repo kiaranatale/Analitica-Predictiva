@@ -5,7 +5,7 @@ Clasificación de ítems de MercadoLibre como **nuevos o usados** (métrica: acc
 ## Modelo final
 1. **Variables**: numéricas, binarias y de texto del ítem (precio, cantidades, fotos, garantía, medios de pago, fechas, forma del título…).
 2. **Stacking (out-of-fold)**: target encoding de vendedor, categoría, ciudad y combinaciones + regresiones logísticas sobre TF-IDF (título, caracteres, atributos).
-3. **BERT en español** (`dccuchile/bert-base-spanish-wwm-cased`) ajustado sobre título + categoría + tipo de publicación en Colab, 5 folds → probabilidades OOF (`colab/`).
+3. **BERT en español** (`dccuchile/bert-base-spanish-wwm-cased`) ajustado en Colab con 5 folds → probabilidades OOF (`colab/`). Dos versiones: v1 (título + categoría + tipo, `colab_bert_oof.py`) y v2 (entrada rica: precio, garantía, atributos, pagos, envío; 3 épocas; `colab_bert_v2.py`).
 4. **Red neuronal propia** (PyTorch): embeddings de título, categoría, vendedor, etc. + variables numéricas.
 5. **LightGBM + CatBoost** (2 semillas) sobre todo lo anterior. Blend final: 0,3 LightGBM + 0,7 CatBoost.
 
@@ -14,10 +14,10 @@ Clasificación de ítems de MercadoLibre como **nuevos o usados** (métrica: acc
 pip install -r requirements.txt
 # poner train_data.jsonlines y test_data.jsonlines en data/
 # (opcional) regenerar colab/oof_bert.npy y colab/test_bert.npy con colab/colab_bert_oof.py en Colab (GPU T4)
-python train.py   --train data/train_data.jsonlines --bert-oof colab/oof_bert.npy   # entrena y guarda models/
-python predict.py --test  data/test_data.jsonlines  --bert-test colab/test_bert.npy # genera submission.csv
+python train.py   --train data/train_data.jsonlines --bert-oof colab/oof_bert.npy colab/oof_beto.npy     # entrena y guarda models/
+python predict.py --test  data/test_data.jsonlines  --bert-test colab/test_bert.npy colab/test_beto.npy # genera submission.csv
 ```
-Los archivos `colab/oof_bert.npy` y `colab/test_bert.npy` ya están incluidos (salida de `colab_bert_oof.py`).
+Los archivos `colab/oof_*.npy` y `colab/test_*.npy` ya están incluidos (salida de los scripts de Colab).
 
 ## Estructura
 - `src/`: features, stacking, red neuronal.
