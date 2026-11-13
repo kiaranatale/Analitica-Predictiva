@@ -1,0 +1,7 @@
+data/*.jsonlines
+models/
+*.pkl
+__pycache__/
+run.log
+submission.csv
+catboost_info/
