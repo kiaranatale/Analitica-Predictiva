@@ -35,8 +35,8 @@ X["nn"] = oof
 X = pd.concat([X, SA], axis=1)  # 5) agregados por vendedor sobre train+test (sin etiquetas)
 C = with_cats(X, df); cc = [c for c in C.columns if c.startswith("cf_")]
 
-# 4) CatBoost (2 semillas). En CV (5 folds) CatBoost solo (94,66%) supera al blend con LightGBM (94,63%), por eso se usa solo.
-cbs = [CatBoostClassifier(iterations=360, learning_rate=0.06, depth=7, thread_count=2, random_seed=s, verbose=0).fit(C, y, cat_features=cc) for s in (42, 7)]
+# 4) CatBoost (2 semillas). En CV (5 folds) CatBoost solo supera al blend con LightGBM; 1000 iter / lr 0.03 (94,76%) > 360 / 0.06 (94,66%).
+cbs = [CatBoostClassifier(iterations=1000, learning_rate=0.03, depth=7, thread_count=2, random_seed=s, verbose=0).fit(C, y, cat_features=cc) for s in (42, 7)]
 joblib.dump({"stack": stack, "pp": pp, "nt": nt, "na": na, "cols": list(X.columns), "cbs": cbs}, os.path.join(a.out, "model.pkl"))
 torch.save([n.state_dict() for n in nets], os.path.join(a.out, "nets.pt"))
 print("modelo guardado en", a.out, round(time.time() - t0), "s")

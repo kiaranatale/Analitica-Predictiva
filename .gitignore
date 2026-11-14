@@ -1,5 +1,6 @@
 data/*.jsonlines
 models/
+models_*/
 *.pkl
 __pycache__/
 run.log
