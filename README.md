@@ -19,6 +19,12 @@ python predict.py --test  data/test_data.jsonlines  --bert-test colab/test_bert.
 ```
 Los archivos `colab/oof_*.npy` y `colab/test_*.npy` ya están incluidos (salida de los scripts de Colab).
 
+Esto reproduce `submission_v5.csv` (Kaggle público 0,94471). La otra submission seleccionada, `submission_v6.csv` (0,94452), agrega el tercer BERT (v3):
+```bash
+python train.py   --train data/train_data.jsonlines --bert-oof colab/oof_bert.npy colab/oof_beto.npy colab/oof_beto3.npy
+python predict.py --test  data/test_data.jsonlines  --bert-test colab/test_bert.npy colab/test_beto.npy colab/test_beto3.npy --out submission_v6.csv
+```
+
 ## Estructura
 - `src/`: features, stacking, red neuronal.
 - `train.py`, `predict.py`: pipeline final.
