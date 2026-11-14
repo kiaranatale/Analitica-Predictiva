@@ -7,3 +7,4 @@ submission.csv
 catboost_info/
 run*.log
 submission*.csv
+cache/
