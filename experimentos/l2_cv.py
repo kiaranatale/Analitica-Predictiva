@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from common import with_cats
 from stack_lib import dense_frame
 ap = argparse.ArgumentParser(); ap.add_argument("--feats", nargs="*", default=[]); ap.add_argument("--bert", nargs="+", default=["bert", "beto"])
-ap.add_argument("--models", default="lgb,cb"); ap.add_argument("--tag", default="run"); a = ap.parse_args()
+ap.add_argument("--models", default="lgb,cb"); ap.add_argument("--tag", default="run"); ap.add_argument("--cb", default="360,0.06,7,3"); a = ap.parse_args()
 c = joblib.load("cache/l1.pkl"); y = c["y"]; t0 = time.time()
 X = pd.concat([dense_frame(c["df"]), c["ftr"]], axis=1)
 for i, b in enumerate(a.bert): X[f"bert{i}"] = np.load(f"colab/oof_{b}.npy")
@@ -20,7 +20,7 @@ for k, (tr, va) in enumerate(StratifiedKFold(5, shuffle=True, random_state=2026)
         pl[va] = lgb.LGBMClassifier(n_estimators=620, learning_rate=0.03, num_leaves=63, colsample_bytree=0.5, subsample=0.8, subsample_freq=1,
                                     random_state=42, verbose=-1, n_jobs=4).fit(X.iloc[tr], y[tr]).predict_proba(X.iloc[va])[:, 1]
     if "cb" in a.models:
-        pc[va] = CatBoostClassifier(iterations=360, learning_rate=0.06, depth=7, thread_count=4, random_seed=42, verbose=0).fit(
+        pc[va] = CatBoostClassifier(iterations=int(a.cb.split(",")[0]), learning_rate=float(a.cb.split(",")[1]), depth=int(a.cb.split(",")[2]), l2_leaf_reg=float(a.cb.split(",")[3]), thread_count=4, random_seed=42, verbose=0).fit(
             C.iloc[tr], y[tr], cat_features=cc).predict_proba(C.iloc[va])[:, 1]
     print(" fold", k, round(time.time() - t0), "s", flush=True)
 acc = lambda p: round(((p > .5) == y).mean(), 5)
