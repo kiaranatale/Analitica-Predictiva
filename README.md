@@ -25,9 +25,9 @@ La otra submission evaluada, **v8** (mejor CV, 94,76%), es la misma con CatBoost
 ## Submissions
 | Submission | Cambio | CV (5 folds) | Kaggle público |
 |---|---|---|---|
-| C_row1 | stack + LightGBM + CatBoost, sin BERT | — | 0,93966 |
-| v4 | + BERT v1 | — | 0,94247 |
-| repo | + red neuronal | — | 0,94438 |
+| C_row1 | v1: stack + LightGBM + CatBoost, sin BERT | — | 0,93966 |
+| v4 | (completar) | — | 0,94247 |
+| repo | (completar) | — | 0,94438 |
 | v5 | + BERT v2 (blend 0,3 LGB + 0,7 CB) | 94,55% | 0,94471 |
 | v6 | + BERT v3 | — | 0,94452 |
 | **v7** ✔ | v5 + agregados por vendedor, CatBoost solo | 94,66% | **0,94490** |
