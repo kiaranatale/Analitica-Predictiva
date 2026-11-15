@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Nuevo o usado</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#14213d;--navy2:#1d2d50;--line:#2c3f68;--gold:#f0b400;--goldtxt:#8a6a00;--paper:#f5f3ee;--card:#fcfbf8;--ink:#14213d;--muted:#55607a;--bd:#dcd8cf}
+@page{size:1334px 750px;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;color:var(--ink);background:#888}
+.s{width:1334px;height:750px;position:relative;overflow:hidden;padding:90px 89px 0;page-break-after:always;background:var(--paper)}
+.s.dark{background:var(--navy);color:#f3f3f3}
+.k{font-family:'Space Grotesk';font-weight:700;letter-spacing:.14em;font-size:17px;color:var(--goldtxt);text-transform:uppercase}
+.dark .k{color:var(--gold)}
+h1{font-family:'Space Grotesk';font-weight:700;font-size:44px;line-height:1.1;margin:22px 0 30px}
+.foot{position:absolute;left:89px;bottom:44px;font-size:16px;color:var(--muted)}
+.dark .foot{color:#aab3c8}
+.row{display:flex;gap:23px}
+.card{flex:1;background:var(--card);border:2px solid var(--bd);border-radius:12px;padding:26px 28px}
+.card.hl{background:var(--gold);border-color:var(--gold)}
+.card .bar{width:66px;height:7px;background:var(--gold);border-radius:4px;margin-bottom:14px}
+.big{font-family:'Space Grotesk';font-weight:700;font-size:64px;line-height:1.05}
+.mid{font-family:'Space Grotesk';font-weight:700;font-size:46px;line-height:1.05;margin:6px 0 10px}
+.ct{font-family:'Space Grotesk';font-weight:700;font-size:25px}
+.cs{font-size:20px;color:var(--muted);line-height:1.45;margin-top:8px}
+.hl .cs{color:var(--ink)}
+ul.b{margin:24px 0 0 26px;font-size:21px;line-height:1.75}
+.note{font-size:20px;color:var(--muted);line-height:1.5;margin-top:22px}
+table{width:100%;border-collapse:collapse;font-size:19px;background:var(--card)}
+th,td{border:1.5px solid var(--bd);padding:11px 15px;text-align:left;vertical-align:top;line-height:1.35}
+th{background:#e6e3dc;font-weight:600}
+td.n{white-space:nowrap;font-weight:600}
+tr.win td{background:#fff3c4}
+.dcard{background:var(--navy2);border:1.5px solid var(--line);border-radius:12px;padding:22px 24px}
+.dcard .ct{color:#fff;font-size:24px;margin-bottom:10px}
+.dcard li,.dcard p{font-size:18px;line-height:1.5;color:#dfe4ef}
+.dcard ul{margin-left:20px}
+.arrow{color:var(--gold);font-size:34px;align-self:center}
+.tag{display:inline-block;background:var(--gold);color:var(--ink);font-weight:600;font-size:15px;border-radius:6px;padding:2px 9px;margin-left:8px;vertical-align:middle}
+</style></head><body>
+
+<!-- 1 -->
+<section class="s dark" style="padding-top:212px">
+  <div class="k">Análisis Predictivo · Examen 3</div>
+  <h1 style="font-size:70px;margin:34px 0 26px">¿Nuevo o usado?</h1>
+  <div style="font-size:27px;color:#c7cfe0">Clasificación de ítems de MercadoLibre · Competencia Kaggle ap-2026-q-2</div>
+  <div style="width:66px;height:7px;background:var(--gold);border-radius:4px;margin:38px 0 40px"></div>
+  <div style="font-size:21px;color:#c7cfe0">Kiara Natale · ITBA</div>
+</section>
+
+<!-- 2 -->
+<section class="s">
+  <div class="k">Problema</div><h1>Datos y métrica</h1>
+  <div class="row">
+    <div class="card"><div class="bar"></div><div class="big">70.000</div><div class="cs">ítems de entrenamiento, con la condición conocida</div></div>
+    <div class="card"><div class="bar"></div><div class="big">30.000</div><div class="cs">ítems de test, para predecir</div></div>
+    <div class="card hl"><div class="big">53,7%</div><div class="cs">son nuevos: predecir siempre «nuevo» ya da 53,7% de accuracy</div></div>
+  </div>
+  <ul class="b">
+    <li>Métrica: accuracy. El ranking público usa el 70% del test; el final, el 30% restante.</li>
+    <li>Validación: primero 80/20 estratificado; al final, <b>CV de 5 folds sobre las 70.000 filas</b> para distinguir mejoras de 0,1 punto (≈70 filas).</li>
+  </ul>
+  <div class="foot">Kiara Natale · Análisis Predictivo · ITBA · 2/9</div>
+</section>
+
+<!-- 3 -->
+<section class="s">
+  <div class="k">1 · Baseline</div><h1>El texto del título es la señal principal</h1>
+  <div class="row">
+    <div class="card"><div class="ct">Árbol de decisión</div><div class="big" style="margin:14px 0 6px">78,9%</div><div class="cs">profundidad 6, solo 8 variables numéricas (precio, cantidad, etc.)</div></div>
+    <div class="card"><div class="ct">Regresión logística</div><div class="big" style="margin:14px 0 6px">81,3%</div><div class="cs">TF-IDF del título, sin ninguna variable numérica</div></div>
+    <div class="card hl"><div class="ct">LightGBM</div><div class="big" style="margin:14px 0 6px">91,5%</div><div class="cs">variables + TF-IDF del texto: +10 puntos de un salto</div></div>
+  </div>
+  <p class="note">Accuracy en validación (80/20). Combinar texto y variables estructuradas fue el mayor salto de todo el proyecto.</p>
+  <div class="foot">Kiara Natale · Análisis Predictivo · ITBA · 3/9</div>
+</section>
+
+<!-- 4 -->
+<section class="s">
+  <div class="k">2 · Selección de modelos · etapa 1</div><h1>Construir el stacking: qué sumó y qué no</h1>
+  <table>
+    <tr><th style="width:45%">Paso</th><th style="width:17%">Accuracy val.</th><th>Qué aprendí</th></tr>
+    <tr><td>+ Target encoding de vendedor y categoría (out-of-fold) + LR de texto apilada</td><td class="n">93,2%</td><td>El vendedor suele vender siempre lo mismo (nuevo o usado)</td></tr>
+    <tr><td>CatBoost con categóricas nativas</td><td class="n">93,7–94,0%</td><td>Mejor modelo individual</td></tr>
+    <tr><td>Blend 0,7 CatBoost + 0,3 LightGBM</td><td class="n">93,9%</td><td>Los dos se equivocan en ítems distintos</td></tr>
+    <tr><td>+ BETO (2 versiones) + red neuronal propia</td><td class="n">≈94,1%</td><td>Aportan lo que los árboles no ven en el texto</td></tr>
+  </table>
+  <p class="note">Sin mejora: XGBoost (93,3%), ExtraTrees (92,3%), kNN de títulos, pseudo-labeling y Optuna. Validación 80/20.</p>
+  <div class="foot">Kiara Natale · Análisis Predictivo · ITBA · 4/9</div>
+</section>
+
+<!-- 5 -->
+<section class="s">
+  <div class="k">2 · Selección de modelos · etapa 2</div><h1>Afinar con CV de 5 folds</h1>
+  <table>
+    <tr><th style="width:47%">Cambio sobre el modelo anterior</th><th style="width:15%">CV 5 folds</th><th>Conclusión</th></tr>
+    <tr><td>Punto de partida: blend 0,3 LightGBM + 0,7 CatBoost (v5)</td><td class="n">94,55%</td><td>—</td></tr>
+    <tr><td>CatBoost solo, sin LightGBM</td><td class="n">94,58%</td><td>El blend no aportaba: modelo más simple</td></tr>
+    <tr class="win"><td>+ agregados por vendedor (train+test, sin etiquetas) → <b>v7</b></td><td class="n">94,66%</td><td>Mejora en los 5 folds · 390 aciertos nuevos vs 310 perdidos</td></tr>
+    <tr><td>+ vecinos de título dentro del vendedor</td><td class="n">sin mejora</td><td>Ya lo capturaba el target encoding</td></tr>
+    <tr><td>CatBoost 1000 iteraciones / lr 0,03 → v8</td><td class="n">94,76%</td><td>Mejor CV, pero no mejoró el público</td></tr>
+    <tr><td>+ 3 BERT nuevos (BERTIN, BETO uncased, BETO alt)</td><td class="n">94,72%</td><td>90–91% solos, pero redundantes con el texto</td></tr>
+  </table>
+  <div class="foot">Kiara Natale · Análisis Predictivo · ITBA · 5/9</div>
+</section>
+
+<!-- 6 -->
+<section class="s dark">
+  <div class="k">3 · Modelo final (v7)</div><h1 style="color:#fff">Stacking en dos niveles</h1>
+  <div class="row" style="gap:16px;align-items:stretch">
+    <div class="dcard" style="flex:.8"><div class="ct">Datos</div><p>Título, atributos, precio, vendedor, categoría, ciudad, fechas, medios de pago, envío, fotos</p></div>
+    <div class="arrow">→</div>
+    <div class="dcard" style="flex:1.9"><div class="ct">Nivel 1 (out-of-fold)</div><ul>
+      <li>Target encoding de vendedor, categoría, ciudad y combinaciones</li>
+      <li>Regresiones logísticas sobre TF-IDF</li>
+      <li>Red neuronal propia (PyTorch)</li>
+      <li>BETO fine-tuneado (2 versiones)</li>
+      <li><b style="color:var(--gold)">Agregados por vendedor</b> (sin etiquetas)</li></ul></div>
+    <div class="arrow">→</div>
+    <div class="dcard" style="flex:1"><div class="ct">Nivel 2</div><p>CatBoost (2 semillas) sobre variables originales + salidas del nivel 1</p></div>
+    <div class="arrow">→</div>
+    <div class="dcard" style="flex:.9;border-color:var(--gold)"><div class="ct">Predicción</div><p>Promedio de los 2 CatBoost, umbral 0,5</p></div>
+  </div>
+  <p class="note" style="color:#c7cfe0;margin-top:20px;font-size:18px">Nivel 1 con 5 folds: cada ítem se predice con un modelo que no lo vio. Agregados por vendedor: publicaciones, categorías, precio relativo, % con garantía… (sobre train + test, sin etiqueta).</p>
+  <div class="foot">Kiara Natale · Análisis Predictivo · ITBA · 6/9</div>
+</section>
+
+<!-- 7 -->
+<section class="s">
+  <div class="k">Resultados</div><h1>Leaderboard público de Kaggle</h1>
+  <div class="row">
+    <div class="card"><div class="cs" style="margin:0">Entrega 1 (sin BERT)</div><div class="mid">0,93966</div></div>
+    <div class="card"><div class="cs" style="margin:0">v5 (+ BETO y red)</div><div class="mid">0,94471</div></div>
+    <div class="card hl"><div class="cs" style="margin:0">v7 · final</div><div class="mid">0,94490</div><div class="cs" style="margin:0">CV 94,66%</div></div>
+    <div class="card"><div class="cs" style="margin:0">v8 · mejor CV</div><div class="mid">0,94395</div><div class="cs" style="margin:0">CV 94,76%</div></div>
+  </div>
+  <ul class="b">
+    <li>+0,5 puntos respecto de la primera entrega, que ya tenía el stacking completo.</li>
+    <li>Error estándar del público ≈ 0,0016. La v8 difiere de la v7 en 209 filas: su caída (~20 filas) es ruido.</li>
+    <li>Seleccionadas: <b>v7</b> (mejor público, mejor CV que v5) y <b>v5</b> como respaldo.</li>
+  </ul>
+  <div class="foot">Kiara Natale · Análisis Predictivo · ITBA · 7/9</div>
+</section>
+
+<!-- 8 -->
+<section class="s dark">
+  <div class="k">4 · Limitaciones y mejoras</div><h1 style="color:#fff">Dónde está el error</h1>
+  <div class="row">
+    <div class="dcard" style="padding:28px"><div class="ct">Limitaciones</div><ul>
+      <li>Vendedores no vistos en train: ≈30% de las filas, pero 56% de los errores (88,6% de acierto vs 96,1% en vendedores conocidos)</li>
+      <li>≈38% de los errores son de confianza alta: probable ruido en las etiquetas</li>
+      <li>Las fotos ya no existen (el servidor devuelve una imagen genérica)</li>
+      <li>Sin GPU local: cada BERT de 5 folds ≈ 75 min en Kaggle</li></ul></div>
+    <div class="dcard" style="padding:28px"><div class="ct">Mejoras posibles</div><ul>
+      <li>El texto está agotado: 3 BERT nuevos rinden 90–91% solos y no suman al ensamble (correlación 0,87–0,95)</li>
+      <li>Para vendedores nuevos hace falta otra fuente (historial, reputación) que el dataset no trae</li>
+      <li>Elegir por CV y no por el público: mejor señal con 70.000 filas que con 21.000</li></ul></div>
+  </div>
+  <div class="foot">Kiara Natale · Análisis Predictivo · ITBA · 8/9</div>
+</section>
+
+<!-- 9 -->
+<section class="s">
+  <div class="k">Anexo</div><h1>Para preguntas</h1>
+  <div class="row" style="gap:20px">
+    <div class="card" style="padding:22px 24px"><div class="ct" style="font-size:22px">Ajuste de CatBoost (CV)</div>
+      <table style="margin-top:12px;font-size:17px">
+        <tr><th>Iter / lr / prof.</th><th>CV</th></tr>
+        <tr><td>360 / 0,06 / 7 (v7)</td><td class="n">94,66%</td></tr>
+        <tr><td>1000 / 0,03 / 7 (v8)</td><td class="n">94,76%</td></tr>
+        <tr><td>800 / 0,04 / 8</td><td class="n">94,74%</td></tr>
+        <tr><td>1600 / 0,02 / 7</td><td class="n">94,74%</td></tr>
+        <tr><td>1000 / 0,03 / 6</td><td class="n">94,61%</td></tr>
+      </table></div>
+    <div class="card" style="padding:22px 24px"><div class="ct" style="font-size:22px">Fugas revisadas</div>
+      <ul style="margin:12px 0 0 20px;font-size:17px;line-height:1.55;color:var(--muted)">
+        <li>IDs anonimizados: sin orden útil</li>
+        <li>Ítem padre o fotos compartidas train–test: ninguno</li>
+        <li>Sufijo de la descripción: sin señal</li>
+        <li>Descartado: promediar predicciones de otros ítems del vendedor (filtra la etiqueta propia)</li></ul></div>
+    <div class="card" style="padding:22px 24px"><div class="ct" style="font-size:22px">¿Es real la mejora?</div>
+      <ul style="margin:12px 0 0 20px;font-size:17px;line-height:1.55;color:var(--muted)">
+        <li>Agregados por vendedor: +0,11 en los 5 folds</li>
+        <li>Mismas filas: 390 aciertos nuevos vs 310 perdidos → McNemar z ≈ 3</li>
+        <li>Público (21.000 filas): 0,001 de accuracy ≈ 21 filas; error estándar ≈ 0,0016</li></ul></div>
+  </div>
+  <div class="foot">Kiara Natale · Análisis Predictivo · ITBA · 9/9</div>
+</section>
+</body></html>

@@ -1,5 +1,6 @@
 data/*.jsonlines
 models/
+models_*/
 *.pkl
 __pycache__/
 run.log
@@ -7,3 +8,4 @@ submission.csv
 catboost_info/
 run*.log
 submission*.csv
+cache/
