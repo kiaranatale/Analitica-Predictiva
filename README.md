@@ -26,15 +26,17 @@ La otra submission evaluada, **v8** (mejor CV, 94,76%), es la misma con CatBoost
 | Submission | Cambio | CV (5 folds) | Kaggle público |
 |---|---|---|---|
 | C_row1 | v1: stack + LightGBM + CatBoost, sin BERT | — | 0,93966 |
-| v4 | (completar) | — | 0,94247 |
-| repo | (completar) | — | 0,94438 |
-| v5 | + BERT v2 (blend 0,3 LGB + 0,7 CB) | 94,55% | 0,94471 |
-| v6 | + BERT v3 | — | 0,94452 |
+| v4 | stack + red neuronal + BERT v1; blend 0,3 LGB + 0,7 CB (script de trabajo `final_v4.py`) | — | 0,94247 |
+| repo | mismo modelo que v4, corrido con `train.py` / `predict.py` del repo ¹ | — | 0,94438 |
+| v5 | + BERT v2 (entrada rica, 90,55% solo) | 94,55% | 0,94471 |
+| v6 | + BERT v3 (suma vendedor, ciudad y fecha) | — | 0,94452 |
 | **v7** ✔ | v5 + agregados por vendedor, CatBoost solo | 94,66% | **0,94490** |
 | v8 | v7 con CatBoost 1000 iter / lr 0,03 | **94,76%** | 0,94395 |
 
+¹ v4 y repo tienen la misma arquitectura y difieren en 240 de 30.000 predicciones (0,8%). No es una mejora del modelo sino variación de la corrida; la hipótesis (no verificada) es que al pasar al repo cambió el hash de las variables categóricas y con él el azar del entrenamiento.
+
 Seleccionadas para el leaderboard final: **v7** y **v5**.
-La v8 mejora la CV (+0,10) pero no el público: difiere de la v7 en solo 209 filas de test (~146 en el público), así que la diferencia pública (~20 filas) está dentro del ruido.
+La v8 mejora la CV (+0,10) pero no el público: difiere de la v7 en solo 209 filas de test (~146 en el público), así que la diferencia pública (~20 filas de ~146 distintas, z ≈ 1,7) no es significativa.
 
 ## Estructura
 - `src/`: features, stacking, red neuronal, agregados por vendedor.
