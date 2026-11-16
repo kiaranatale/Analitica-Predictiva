@@ -45,6 +45,36 @@ Ritmo: ~130 palabras por minuto. Los tiempos son acumulados. El anexo (lámina 9
 
 ---
 
+# Qué es cada pieza y para qué la uso
+
+**Árbol de decisión.** Hace preguntas sucesivas sobre las variables ("¿el precio es mayor a X?") hasta llegar a una respuesta. Es simple y rápido, por eso sirvió como baseline.
+
+**Regresión logística.** Modelo lineal que da una probabilidad: suma pesos de cada variable o palabra y la pasa por una curva entre 0 y 1. La uso sobre el texto, porque con miles de palabras funciona bien y es rápida.
+
+**Frecuencia ponderada de palabras (TF-IDF).** Convierte un título en números: cada palabra tiene un peso que sube si aparece en ese título y baja si aparece en casi todos (como "de" o "para"). Es la forma de darle texto a la regresión logística.
+
+**LightGBM.** Muchos árboles chicos entrenados uno detrás de otro, donde cada uno corrige los errores de los anteriores (*gradient boosting*). Muy rápido y bueno con variables numéricas. Lo usé para el baseline fuerte y para comparar variantes rápido; en el modelo final lo saqué porque no sumaba.
+
+**CatBoost.** El mismo principio que LightGBM, pero diseñado para variables categóricas con muchos valores (vendedor, ciudad, categoría): las convierte en números sin filtrar la etiqueta. Por eso fue el mejor y es el modelo del nivel 2 en la versión final.
+
+**XGBoost / ExtraTrees.** Otras variantes de conjuntos de árboles. Las probé y rindieron menos que CatBoost.
+
+**Target encoding.** Reemplaza una categoría por la proporción de usados que tiene en train (por ejemplo, "este vendedor publica 95% usados"). Le da al modelo el dato más fuerte del problema: qué suele vender cada vendedor.
+
+**BETO.** Un modelo de lenguaje (tipo BERT) preentrenado con muchísimo texto en español. Lo ajusté para clasificar nuevo/usado leyendo el título y los atributos. Entiende contexto ("sin uso", "impecable", "caja cerrada") mejor que contar palabras. **BERTIN** es otro modelo del mismo tipo en español.
+
+**Red neuronal propia.** Una red más chica que BETO, hecha por mí en PyTorch: aprende una representación de las palabras del título y de cada categoría y las combina con las variables numéricas. Aporta otra mirada del mismo dato, que ayuda al ensamble.
+
+**Agregados por vendedor.** Resúmenes de cada vendedor calculados con train y test sin la etiqueta: cuántas publicaciones tiene, en cuántas categorías vende, si el precio del ítem está por encima de su promedio. Sirven sobre todo para vendedores que tienen pocos ítems con etiqueta.
+
+**Stacking.** Entrenar un modelo (nivel 2) que usa como variables las predicciones de otros modelos (nivel 1). Cada modelo ve el problema distinto y el nivel 2 aprende cuánto confiar en cada uno.
+
+**Out-of-fold.** Forma de generar las predicciones del nivel 1 sin trampa: se divide el train en 5 partes y cada parte se predice con un modelo entrenado con las otras 4.
+
+**Validación cruzada de 5 folds.** Lo mismo aplicado a medir: entreno 5 veces dejando afuera una parte distinta y promedio el acierto. Usa las 70.000 filas para medir, así que detecta mejoras más chicas que un 80/20.
+
+**Test de McNemar.** Compara dos modelos sobre las mismas filas mirando solo donde no coinciden: si uno gana muchas más de esas filas que el otro, la diferencia no es casualidad.
+
 # Preguntas probables
 
 **¿Por qué out-of-fold?** Si calculo el target encoding o las predicciones de los modelos de lenguaje con el mismo dato que después uso para entrenar el nivel 2, ese dato "ya conoce" su etiqueta. El nivel 2 confiaría demasiado en esas columnas y en test fallaría. Con 5 folds, cada fila recibe la predicción de un modelo entrenado sin ella.
